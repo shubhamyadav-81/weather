@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather App</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">weather<span class="accent">.</span></div>
+            
+            <div class="search-container">
+                <input type="text" id="searchInput" placeholder="Search by city or zip code">
+                <button id="searchBtn" class="search-button">
+                    <i class="fas fa-search"></i>
+                </button>
+            </div>
+            
+            <nav class="nav-links">
+                <a href="#news">News</a>
+                <a href="#finance">Finance</a>
+                <a href="#sports">Sports</a>
+                <a href="#more">More</a>
+                <button class="btn-mail">
+                    <i class="fas fa-envelope"></i> Mail
+                </button>
+                <button class="btn-signin">Sign in</button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Current Location Bar -->
+    <div class="current-location-bar">
+        <div class="current-city" id="currentCityDisplay">
+            <i class="fas fa-map-marker-alt"></i> Mumbai <i class="fas fa-arrow-up"></i>
+            <div class="weather-badge">
+                <i class="fas fa-cloud-rain"></i> Showers, 88°
+            </div>
+        </div>
+        <div class="favorite-places">
+            <div class="add-favorite">
+                <i class="fas fa-plus"></i> Add your favorite places
+                <p>Follow a location to see it here</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Weather Display -->
+    <div class="main-weather-container">
+        <div class="background-image" id="backgroundImage"></div>
+        
+        <div class="weather-card">
+            <div class="location-header">
+                <span class="country" id="country">India</span>
+                <h1 class="city-name" id="cityName">Mumbai</h1>
+            </div>
+            
+            <div class="temperature-main">
+                <div class="weather-icon-main" id="weatherIconMain">
+                    <i class="fas fa-cloud-rain"></i>
+                </div>
+                <div class="temp-value" id="temperature">90°</div>
+                <div class="realfeel">RealFeel® <span id="realFeel">95°</span></div>
+            </div>
+            
+            <div class="weather-description" id="weatherDescription">
+                Showers today with a high of 90 °F and a low of 78 °F. There is a 80% chance of precipitation.
+            </div>
+            
+            <div class="weather-details">
+                <div class="high-low">
+                    H <span id="highTemp">90°</span> L <span id="lowTemp">78°</span>
+                </div>
+                <div class="sun-times">
+                    <i class="fas fa-sun"></i> <span id="sunrise">6:37 AM</span>
+                    <i class="fas fa-moon"></i> <span id="sunset">6:07 PM</span>
+                </div>
+            </div>
+            
+            <button class="follow-btn">
+                <i class="fas fa-star"></i> Follow
+            </button>
+        </div>
+        
+        <div class="attribution">
+            <div class="powered-by">
+                <i class="fas fa-sun"></i> Powered by OpenWeatherMap
+            </div>
+        </div>
+    </div>
+
+    <!-- Forecast Section -->
+    <div class="forecast-section">
+        <div class="forecast-header">
+            <h2>Next 8 days</h2>
+            <button class="display-btn">
+                <i class="fas fa-sliders-h"></i> Display
+            </button>
+        </div>
+        
+        <div class="daily-forecast" id="dailyForecast">
+            <!-- Daily forecast items will be inserted here -->
+        </div>
+    </div>
+
+    <!-- Tabs Section -->
+    <div class="tabs-container">
+        <div class="tabs">
+            <button class="tab-btn active" data-tab="hourly">
+                <i class="fas fa-clock"></i> Hourly
+            </button>
+            <button class="tab-btn" data-tab="conditions">
+                <i class="fas fa-info-circle"></i> Conditions
+            </button>
+            <button class="tab-btn" data-tab="map">
+                <i class="fas fa-map"></i> Map
+            </button>
+        </div>
+        
+        <!-- Hourly Forecast Tab -->
+        <div class="tab-content active" id="hourly-tab">
+            <div class="hourly-container" id="hourlyContainer">
+                <!-- Hourly items will be inserted here -->
+            </div>
+            <div class="hourly-graphs">
+                <div class="graph-section">
+                    <h3>Precipitation in/hr</h3>
+                    <canvas id="precipitationChart"></canvas>
+                </div>
+                <div class="graph-section">
+                    <h3>Wind MPH</h3>
+                    <div id="windChart"></div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Conditions Tab -->
+        <div class="tab-content" id="conditions-tab">
+            <div class="conditions-grid">
+                <div class="condition-item">
+                    <i class="fas fa-tint"></i>
+                    <label>Humidity</label>
+                    <span class="badge" id="humidityBadge">Very humid - 55%</span>
+                </div>
+                <div class="condition-item">
+                    <i class="fas fa-sun"></i>
+                    <label>Peak UV</label>
+                    <span class="badge uv-low" id="uvBadge">Low - 2 UV</span>
+                </div>
+                <div class="condition-item">
+                    <i class="fas fa-eye"></i>
+                    <label>Visibility</label>
+                    <span class="badge visibility" id="visibilityBadge">Average</span>
+                </div>
+                <div class="condition-item">
+                    <i class="fas fa-building"></i>
+                    <label>Air quality</label>
+                    <span class="badge aq-moderate" id="aqiBadge">Moderate - 54 UAQI</span>
+                </div>
+                <div class="condition-item">
+                    <i class="fas fa-compress"></i>
+                    <label>Pressure</label>
+                    <span class="badge pressure-low" id="pressureBadge">Low</span>
+                </div>
+                <div class="condition-item">
+                    <i class="fas fa-moon"></i>
+                    <label>Moon</label>
+                    <span class="badge" id="moonBadge">Waxing crescent</span>
+                </div>
+            </div>
+            <p class="source-text">Source: Includes air quality data from Google</p>
+        </div>
+        
+        <!-- Map Tab -->
+        <div class="tab-content" id="map-tab">
+            <div class="map-container">
+                <button class="radar-btn">
+                    <i class="fas fa-radar"></i> Radar <i class="fas fa-chevron-down"></i>
+                </button>
+                <div id="map"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Indian Cities Forecast Section -->
+    <div class="world-forecasts">
+        <h2>Major Indian Cities</h2>
+        <div class="world-cities-grid" id="worldCitiesGrid">
+            <!-- Indian city cards will be inserted here -->
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <a href="#terms">Terms and Privacy Policy</a>
+        <a href="#privacy">Privacy Dashboard</a>
+        <a href="#ads">About our Ads</a>
+        <a href="#feedback">Feedback</a>
+        <p>&copy;2025 Weather App. All rights reserved.</p>
+    </footer>
+
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
+
